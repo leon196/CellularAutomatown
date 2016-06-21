@@ -18,8 +18,14 @@ public class CellularAutomaton : MonoBehaviour
 	[Range(32, 2048)] public int height = 128;
 
 	// refresh rate
-	[Range(0.0f, 1.0f)] public float delay = 0.1f;
+	[Range(1, 60)] public int frameRate = 60;
+	private float delay = 0f;
 	private float last = 0f;
+
+	[Range(0f, 1f)] public float lifeTreshold = 0.5f;
+	[Range(0f, 0.1f)] public float acceleration = 0.1f;
+
+	public bool startWithNoise = false;
 
 	// internal render process
 	private Texture2D input;
@@ -33,9 +39,17 @@ public class CellularAutomaton : MonoBehaviour
 		input = new Texture2D(width, height);
 		
 		Color[] colorArray = new Color[width * height];
-		for (int i = 0; i < colorArray.Length; ++i) 
+		if (startWithNoise)
 		{
-			colorArray[i] = Random.Range(0f, 1f) > 0.5f ? Color.white : Color.black;
+			for (int i = 0; i < colorArray.Length; ++i) {
+				colorArray[i] = Random.Range(0f, 1f) > 0.5f ? Color.white : Color.black;
+			}
+		}
+		else
+		{
+			for (int i = 0; i < colorArray.Length; ++i) {
+				colorArray[i] = Color.black;
+			}
 		}
 		
 		input.SetPixels(colorArray);
@@ -48,9 +62,9 @@ public class CellularAutomaton : MonoBehaviour
 
 		frameBuffer = new FrameBuffer();
 		frameBuffer.Create(width, height);
-		output = frameBuffer.Get();
-		frameBuffer.Swap();
 		Graphics.Blit(input, frameBuffer.Get());
+		frameBuffer.Swap();
+		output = frameBuffer.Get();
 	}
 
 	public void onPreRender (Camera camera)
@@ -62,11 +76,14 @@ public class CellularAutomaton : MonoBehaviour
 		else
 		{
 			materialCellularAutomaton.SetVector("_Resolution", new Vector2(width, height));
+			materialCellularAutomaton.SetFloat("_LifeTreshold", lifeTreshold);
+			materialCellularAutomaton.SetFloat("_Acceleration", acceleration);
 		}
 
 		if (last + delay <= Time.time)
 		{
 			last = Time.time;
+			delay = 1f / (float)frameRate;
 
 			Graphics.Blit(frameBuffer.Get(), output, materialCellularAutomaton);
 
@@ -78,5 +95,12 @@ public class CellularAutomaton : MonoBehaviour
 				materialOutput.mainTexture = output;
 			}
 		}
+	}
+
+	public void Print (Texture texture)
+	{
+		Graphics.Blit(texture, frameBuffer.Get());
+		frameBuffer.Swap();
+		Graphics.Blit(texture, frameBuffer.Get());
 	}
 }

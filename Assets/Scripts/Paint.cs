@@ -6,6 +6,7 @@ public class Paint : MonoBehaviour
 {
 	public Color color = Color.white;
 	[Range (1, 10)] public int size = 1;
+	public Texture background;
 
 	Ray ray;
 	RaycastHit hitInfo;
@@ -19,11 +20,13 @@ public class Paint : MonoBehaviour
 	{
 		if (material)
 		{
+			UpdatePaint(hitInfo.textureCoord);
+
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hitInfo, 100)) 
 			{
 					// Debug.DrawLine(ray.origin, hitInfo.point);
-					UpdatePaint(hitInfo.textureCoord);
+					StartPaint();
 			}
 			else
 			{
@@ -33,15 +36,21 @@ public class Paint : MonoBehaviour
 		else
 		{
 			CellularAutomaton cellularAutomaton = GameObject.FindObjectOfType<CellularAutomaton>();
+			cellularAutomaton.Print(background);
 			material = cellularAutomaton.materialCellularAutomaton;
 		}
 	}
 
-	void UpdatePaint (Vector2 point)
+	void StartPaint ()
 	{
 		material.SetFloat("_ShouldPaint", 1f);
-		material.SetFloat("_PaintSize", size);
+	}
+
+	void UpdatePaint (Vector2 point)
+	{
+		material.SetTexture("_Background", background);
 		material.SetColor("_PaintColor", color);
+		material.SetFloat("_PaintSize", size);
 		material.SetVector("_PaintPosition", point);
 	}
 

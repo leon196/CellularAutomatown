@@ -10,10 +10,6 @@ public class CellularAutomaton : MonoBehaviour
 	// material used to store cellular automaton
 	[HideInInspector] public Material materialCellularAutomaton;
 
-	// grid size
-	[Range(32, 2048)] public int width = 128;
-	[Range(32, 2048)] public int height = 128;
-
 	// refresh rate
 	[Range(1, 60)] public int frameRate = 60;
 	private float delay = 0f;
@@ -31,9 +27,9 @@ public class CellularAutomaton : MonoBehaviour
 	{
 		Camera.onPreRender += onPreRender;
 		
-		input = new Texture2D(width, height);
+		input = new Texture2D(Engine.width, Engine.height);
 		
-		Color[] colorArray = new Color[width * height];
+		Color[] colorArray = new Color[Engine.width * Engine.height];
 		if (startWithNoise)
 		{
 			for (int i = 0; i < colorArray.Length; ++i) {
@@ -58,7 +54,7 @@ public class CellularAutomaton : MonoBehaviour
 		}
 
 		frameBuffer = new FrameBuffer();
-		frameBuffer.Create(width, height);
+		frameBuffer.Create(Engine.width, Engine.height);
 		Graphics.Blit(input, frameBuffer.Get());
 		frameBuffer.Swap();
 		output = frameBuffer.Get();
@@ -72,7 +68,7 @@ public class CellularAutomaton : MonoBehaviour
 		}
 		else
 		{
-			materialCellularAutomaton.SetVector("_Resolution", new Vector2(width, height));
+			materialCellularAutomaton.SetVector("_Resolution", new Vector2(Engine.width, Engine.height));
 		}
 
 		if (last + delay <= Time.time)

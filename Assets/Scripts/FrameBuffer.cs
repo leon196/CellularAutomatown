@@ -22,7 +22,7 @@ public class FrameBuffer
 			}
 			textures[i] = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
 			textures[i].Create();
-			textures[i].filterMode = FilterMode.Point;
+			// textures[i].filterMode = FilterMode.Point;
 		}
 	}
 

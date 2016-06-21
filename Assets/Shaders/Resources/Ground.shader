@@ -53,7 +53,9 @@ Shader "Hidden/Ground"
 
 				if (_ShouldPaint) 
 				{
-					float paint = step(distance(i.uv, _PaintPosition), _PaintSize / _Resolution);
+					float dist = distance(i.uv, _PaintPosition);
+					float d = 1.0 - clamp(dist * 20.0, 0.0, 1.0);
+					float paint = step(dist, _PaintSize / _Resolution) * d;
 					col.rgb = lerp(col.rgb, _PaintColor, paint);
 				}
 

@@ -23,6 +23,11 @@ public class Ground : CellularAutomaton
 			materialCellularAutomaton.SetTexture("_WaterTex", water.output);
 			materialCellularAutomaton.SetTexture("_HeightTex", heightTexture);
 
+			if (materialAlpha)
+			{
+				materialAlpha.mainTexture = water.output;
+			}
+
 			if (materialHeightMap)
 			{
 				materialHeightMap.mainTexture = output;

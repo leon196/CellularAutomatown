@@ -38,7 +38,9 @@ Shader "Custom/Transparent" {
 
 			half4 frag (v2f i) : COLOR
 			{
-				return _Color;
+				fixed4 col = tex2D(_MainTex, i.uv);
+				col.a = smoothstep(0.2, 0.4, Luminance(col.rgb));
+				return col;
 			}
 			ENDCG
 		} 

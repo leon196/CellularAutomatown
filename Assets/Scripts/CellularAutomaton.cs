@@ -10,9 +10,6 @@ public class CellularAutomaton : MonoBehaviour
 	// material used to store cellular automaton
 	[HideInInspector] public Material materialCellularAutomaton;
 
-	// material to show texture
-	public Material materialOutput;
-
 	// grid size
 	[Range(32, 2048)] public int width = 128;
 	[Range(32, 2048)] public int height = 128;
@@ -22,15 +19,13 @@ public class CellularAutomaton : MonoBehaviour
 	private float delay = 0f;
 	private float last = 0f;
 
-	[Range(0f, 1f)] public float lifeTreshold = 0.5f;
-	[Range(0f, 0.1f)] public float acceleration = 0.1f;
-
 	public bool startWithNoise = false;
 
 	// internal render process
 	private Texture2D input;
-	private RenderTexture output;
 	private FrameBuffer frameBuffer;
+	private Material materialOutput;
+	[HideInInspector] public RenderTexture output;
 
 	void Start ()
 	{
@@ -55,6 +50,8 @@ public class CellularAutomaton : MonoBehaviour
 		input.SetPixels(colorArray);
 		input.Apply();
 
+		materialOutput = GetComponent<Renderer>().sharedMaterial;
+
 		if (materialOutput)
 		{
 			materialOutput.mainTexture = input;
@@ -76,8 +73,6 @@ public class CellularAutomaton : MonoBehaviour
 		else
 		{
 			materialCellularAutomaton.SetVector("_Resolution", new Vector2(width, height));
-			materialCellularAutomaton.SetFloat("_LifeTreshold", lifeTreshold);
-			materialCellularAutomaton.SetFloat("_Acceleration", acceleration);
 		}
 
 		if (last + delay <= Time.time)

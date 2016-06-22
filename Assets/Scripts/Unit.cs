@@ -7,6 +7,8 @@ public class Unit
 	private float y;
 	private bool instantiated;
 	private string type;
+	private Object instance;
+
 
 	public Unit(Vector2 sample)
 	{
@@ -20,9 +22,14 @@ public class Unit
 	{
 		if (!instantiated)
 		{
-			Object.Instantiate (body, new Vector3 (x, y, 0), Quaternion.identity);
+			instance = Object.Instantiate (body, new Vector3 (x, y, 0), Quaternion.identity);
 			instantiated = true;
 		}
+	}
+
+	public void demodelize(float lifespan)
+	{
+		Object.Destroy (instance, lifespan);
 	}
 
 	public float getX()

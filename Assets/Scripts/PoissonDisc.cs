@@ -85,10 +85,10 @@ public class PoissonDiscSampler
     {
         GridPos pos = new GridPos(sample, cellSize);
 
-        int xmin = Mathf.Max(pos.x - 2, 0);
-        int ymin = Mathf.Max(pos.y - 2, 0);
+		int xmin = Mathf.Max(pos.x - 2, 0);
+		int ymin = Mathf.Max(pos.y - 2, 0);
         int xmax = Mathf.Min(pos.x + 2, grid.GetLength(0) - 1);
-        int ymax = Mathf.Min(pos.y + 2, grid.GetLength(1) - 1);
+		int ymax = Mathf.Min(pos.y + 2, grid.GetLength(1) - 1);
 
         for (int y = ymin; y <= ymax; y++) {
             for (int x = xmin; x <= xmax; x++) {
@@ -112,7 +112,7 @@ public class PoissonDiscSampler
     {
         activeSamples.Add(sample);
         GridPos pos = new GridPos(sample, cellSize);
-        grid[pos.x, pos.y] = sample;
+		grid[pos.x, pos.y] = sample;
         return sample;
     }
 
@@ -125,7 +125,7 @@ public class PoissonDiscSampler
         public GridPos(Vector2 sample, float cellSize)
         {
             x = (int)(sample.x / cellSize);
-            y = (int)(sample.y / cellSize);
+			y = (int)(sample.y / cellSize);
         }
     }
 }

@@ -3,20 +3,20 @@ using System.Collections;
 
 public class Unit
 {
-	public GameObject body;
 	private float x;
 	private float y;
 	private bool instantiated;
+	private string type;
 
-	public Unit(Vector2 sample, GameObject _body)
+	public Unit(Vector2 sample)
 	{
 		x = sample.x;
 		y = sample.y;
-		body = _body;
 		instantiated = false;
+		type = "default";
 	}
 
-	public void modelize()
+	public void modelize(GameObject body)
 	{
 		if (!instantiated)
 		{
@@ -45,16 +45,6 @@ public class Unit
 		y = _y;
 	}
 
-	public GameObject getBody()
-	{
-		return body;
-	}
-
-	private void setBody(GameObject _body)
-	{
-		body = _body;
-	}
-
 	public bool getInstantiated()
 	{
 		return instantiated;
@@ -63,5 +53,15 @@ public class Unit
 	private void setInstantiated(bool _in)
 	{
 		instantiated = _in;
+	}
+
+	public string getType()
+	{
+		return type;
+	}
+
+	public void setType(string _type)
+	{
+		type = _type;
 	}
 }

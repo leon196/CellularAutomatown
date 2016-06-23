@@ -84,27 +84,27 @@ public class Game : MonoBehaviour {
 
 	void Update ()
 	{
-		Vector2 randUnit = activeList[Random.Range(0, unitList.Count())].getV();
-		Vector2	newPos = mpd.findPosition (randUnit);
+		Vector2 randUnit = activeList[Random.Range(0, activeList.Count())].getV();
+		int k = 0;
+		while (k < 10) {
+			Vector2	newPos = mpd.findPosition (randUnit);
 //		Debug.Log ("randUnit: "+randUnit.x.ToString()+"  \\  "+randUnit.y.ToString()+"\nnewPos: "+newPos.x.ToString()+"  \\  "+newPos.y.ToString());
 //		Debug.Log(unitList.Count());
-		Unit dat = new Unit (newPos);
-		int k = 0;
-		if (newPos != randUnit) {
-			unitList.Add (dat);
-			activeList.Add (dat);
-			dat.modelize (this.getBody (dat.getType ()));
-			dat.demodelize (50.0f);
-			if (activeList.Count () > 1) {
-				activeList.Remove (dat);
-			}
-		}
-		else
-		{
-			k += 1;
-			if (k == 20)
-			{
-				unitList.Remove (dat);
+			Unit dat = new Unit (newPos);
+			if (newPos != randUnit) {
+				unitList.Add (dat);
+				activeList.Add (dat);
+				dat.modelize (this.getBody (dat.getType ()));
+				dat.demodelize ((float)Random.Range(5, 40));
+				return;
+			} else {
+				k += 1;
+				if (k >= 10) {
+					activeList.Remove (dat);
+					randUnit = activeList[Random.Range(0, activeList.Count())].getV();
+					k = 0;
+					//Debug.Log("Failed to place point after 20 attempts");
+				}
 			}
 		}
 //		Debug.Log (Random.Range (0, unitList.Count ()));

@@ -268,6 +268,13 @@ float3 rotateX(float3 v, float t)
   return float3(v.x, v.y * cost - v.z * sint, v.y * sint + v.z * cost);
 }
 
+float3 rotateZ(float3 p, float angle)
+{
+    float c = cos(angle);
+    float s = sin(angle);
+    return float3(c*p.x+s*p.y, -s*p.x+c*p.y, p.z);
+}
+
 float3 getNormal(float3 a, float3 b, float3 c)
 {
   float3 u = b - a;

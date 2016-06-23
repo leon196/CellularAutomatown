@@ -105,13 +105,13 @@ public class Game : MonoBehaviour {
 
 			Vector2 viewportPos = orthoCamera.WorldToViewportPoint(newPos);
 			Color textureColor = texture2D.GetPixel((int)(viewportPos.x * texture2D.width),(int)(viewportPos.y * texture2D.height));
-			float luminance = Mathf.Clamp(textureColor.g - textureColor.b, 0f, 1f);
+			float luminance = Mathf.Clamp(textureColor.g - textureColor.b - textureColor.r, 0f, 1f);
 
 			if (newPos != randUnit) {
 				unitList.Add (dat);
 				activeList.Add (dat);
 				dat.modelize (this.getBody (dat.getType ()));
-				dat.demodelize (10f * luminance);
+				dat.demodelize (30f * luminance);
 				break;
 			} else {
 				k += 1;

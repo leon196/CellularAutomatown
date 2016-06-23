@@ -59,9 +59,11 @@ Shader "Hidden/Water"
 
 				// col.rgb = lerp(col.rgb * 0.9, _GreenColor, 0.1);
 
-				col.b *= 0.99;
-				col.g *= lerp(0.99, 1.0, tex2D(_CameraTexture, i.uv).r);
-				col.rgb = lerp(col.rgb, _WaterColor, step(0.40, Luminance(tex2D(_GroundTex, i.uv))));
+				col *= 0.99;
+				col.rg += lerp(float2(0.1,-0.01), float2(-0.001, 0.01), tex2D(_CameraTexture, i.uv).r);
+				float os = sin(_Time.y * 0.2) * 0.5 + 0.5;
+				col.rgb = lerp(col.rgb, _WaterColor, smoothstep(0.4, 1.1, Luminance(tex2D(_GroundTex, i.uv))));
+				// col.b *= 0.9;
 				// col.rgb = lerp(col.rgb * 0.99, _WaterColor, step(0.5, Luminance(tex2D(_GroundTex, i.uv))));
 
 				// col.rgb *= 0.99;

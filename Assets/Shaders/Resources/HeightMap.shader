@@ -15,8 +15,10 @@
 			#pragma vertex vert
 			#pragma geometry geom
 			#pragma fragment frag
+			#pragma target 3.0
 			
 			#include "UnityCG.cginc"
+			#include "Utils.cginc"
 			
 			struct GS_INPUT
 			{
@@ -81,7 +83,8 @@
 				// float h = tex2D(_HeightTex, i.uv).r;
 				// col.rgb = lerp(col.rgb, float3(0,0,1), 1.0 - smoothstep(0.0, 0.5, h));
 				// col.rgb = normalize(i.normal) * 0.5 + 0.5;
-				col.rgb = float3(1,1,1) * (dot(float3(0,1,0), normalize(i.normal)) * 0.5 + 0.5);
+				float d = dot(normalize(rotateZ(float3(0,1,0), _Time.y * 0.1)), normalize(i.normal)) * 0.5 + 0.6;
+				col.rgb = float3(1,1,1) * (sqrt(d));
 				return col;
 			}
 			ENDCG

@@ -16,6 +16,7 @@
 			CGPROGRAM
 			#pragma vertex vert_img
 			#pragma fragment frag
+			#pragma target 3.0
 			
 			#include "UnityCG.cginc"
 			#include "../Utils.cginc"
@@ -60,6 +61,7 @@
 			sampler2D _WaterTex;
 			float4 _MainTex_ST;
 			float2 _Resolution;
+			float _Range;
 
 			sampler2D _GrabTexture;
 			float4 _GrabTexture_ST;
@@ -131,14 +133,14 @@
 				// color -= edge;
 
 				fixed4 color = tex2D(_CameraTexture, i.uv);
-				fixed4 edge = 1.0 - clamp(abs(filter2(_GrabTexture, i.uvgrab, float4(_Resolution * 2, 1, 1))), 0.0, 1.0);
+				fixed4 edge = clamp(abs(filter2(_GrabTexture, i.uvgrab, float4(_Resolution * 8, 1, 1))), 0.0, 1.0);
 				color.rgb *= edge.rgb;
 
-				fixed4 water = tex2D(_WaterTex, i.uv);
+				fixed4 water = floor(tex2D(_WaterTex, i.uv) * 2.0) / 2.0;
 				color.rgb = lerp(color.rgb, water, Luminance(water));
 
 				fixed4 house = tex2D(_UITexture, i.uv);
-				color.rgb = lerp(color.rgb, house.rgb, Luminance(house));
+				color.rgb = lerp(color.rgb, float3(1,1,1), step(0.5, Luminance(house)));
 
 				return color;
 			}

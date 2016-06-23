@@ -13,6 +13,7 @@ Shader "Hidden/Ground"
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma target 3.0
 			#include "UnityCG.cginc"
 			#include "Utils.cginc"
 			
@@ -58,7 +59,7 @@ Shader "Hidden/Ground"
 				angle = n * PI * 2.0;
 				// offset += float2(cos(angle), sin(angle)) * unit;
 
-				offset -= lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit * 0.25;
+				// offset -= lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit * 0.25;
 
 				angle = rand(i.screenUV + _Time.y) * PI * 2;
 				// float osc = sin(_Time.y) * 0.5 + 0.5;

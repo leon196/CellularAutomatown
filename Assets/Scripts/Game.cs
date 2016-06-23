@@ -10,13 +10,16 @@ public class Game : MonoBehaviour {
 
 	PoissonDiscSampler sampler;
 	List<Unit> unitList;
+	List<Unit> activeList;
+
+
 
 	private bool flag = true;
 
 	[Range (1, 50)] public float width = 10;
 	[Range (1, 50)] public float height = 10;
 	[Range (0f, 3f)] public float radius = 0.3f;
-	[Range (0.03f, 1f)] public float lifespan = 0.1f;
+	public float lifespan = 100.0f;
 
 	private MyPDisc mpd;
 
@@ -26,8 +29,8 @@ public class Game : MonoBehaviour {
 		mpd = new MyPDisc ();
 		Debug.Log ("<-=  Game Launched  =->\n");
 
-		sampler = new PoissonDiscSampler(width, height, 0.3f);
-		unitList = new List<Unit>();
+		//sampler = new PoissonDiscSampler(width, height, 0.3f);
+		//unitList = new List<Unit>();
 		/*
 		foreach (Vector2 sample in sampler.Samples())
 		{
@@ -67,24 +70,62 @@ public class Game : MonoBehaviour {
 			else
 				i += 100;
 		}
-		*/
 
-		sampler = new PoissonDiscSampler (1000, 1000, 10f);
+
+		sampler = new PoissonDiscSampler (1000, 1000, 10f);*/
 		unitList = new List<Unit> ();
-
-		foreach (Vector2 sample in sampler.Samples())
+		unitList.Add (new Unit (new Vector2 (12.0f, 12.0f)));
+		activeList = unitList;
+		/*foreach (Vector2 sample in sampler.Samples())
 		{
 			unitList.Add (new Unit (sample));
-		}
+		}*/
 	}
-	
+
 	void Update ()
 	{
-		foreach (Unit unit in unitList)
-		{
-			unit.modelize (this.getBody(unit.getType()));
-			//unit.demodelize (lifespan);
+		Vector2 randUnit = activeList[Random.Range(0, unitList.Count())].getV();
+		Vector2	newPos = mpd.findPosition (randUnit);
+//		Debug.Log ("randUnit: "+randUnit.x.ToString()+"  \\  "+randUnit.y.ToString()+"\nnewPos: "+newPos.x.ToString()+"  \\  "+newPos.y.ToString());
+//		Debug.Log(unitList.Count());
+		Unit dat = new Unit (newPos);
+		int k = 0;
+		if (newPos != randUnit) {
+			unitList.Add (dat);
+			activeList.Add (dat);
+			dat.modelize (this.getBody (dat.getType ()));
+			dat.demodelize (50.0f);
+			if (activeList.Count () > 1) {
+				activeList.Remove (dat);
+			}
 		}
+		else
+		{
+			k += 1;
+			if (k == 20)
+			{
+				unitList.Remove (dat);
+			}
+		}
+//		Debug.Log (Random.Range (0, unitList.Count ()));
+		/*foreach (Unit unit in unitList) {
+			unit.modelize (this.getBody (unit.getType ()));
+			unit.demodelize (lifespan);
+			if (unitList.Count () > 1 && ifps == 60) {
+				unitList.Remove (unit);
+				ifps = 0;
+			}
+		}
+		int i = 0;
+		while (i < unitList.Count()) {
+			Unit unit = unitList [i++];
+			unit.modelize (this.getBody (unit.getType ()));
+			unit.demodelize (lifespan);
+			if (unitList.Count () > 1) {
+				unitList.Remove (unit);
+			}
+		}
+		*/
 	}
 
 	public GameObject getBody(string type)

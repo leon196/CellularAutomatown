@@ -5,6 +5,7 @@ public class Unit
 {
 	private float x;
 	private float y;
+	private Vector2 v;
 	private bool instantiated;
 	private string type;
 	private Object instance;
@@ -14,6 +15,7 @@ public class Unit
 	{
 		x = sample.x;
 		y = sample.y;
+		v = sample;
 		instantiated = false;
 		type = "default";
 	}
@@ -30,6 +32,7 @@ public class Unit
 	public void demodelize(float lifespan)
 	{
 		Object.Destroy (instance, lifespan);
+		instantiated = false;
 	}
 
 	public float getX()
@@ -50,6 +53,16 @@ public class Unit
 	private void setY(float _y)
 	{
 		y = _y;
+	}
+
+	public Vector2 getV()
+	{
+		return v;
+	}
+
+	private void setV(Vector2 _v)
+	{
+		v = _v;
 	}
 
 	public bool getInstantiated()

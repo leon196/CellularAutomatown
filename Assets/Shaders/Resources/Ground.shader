@@ -39,9 +39,9 @@ Shader "Hidden/Ground"
 				offset += lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit * 0.02;
 				
 				// fixed4 col = lerp(tex2D(_MainTex, i.uv), tex2D(_HeightTex, i.uv - offset), 0.5);
-				// fixed4 col = tex2D(_MainTex, i.uv - offset);
+				fixed4 col = tex2D(_MainTex, i.uv - offset);
 
-				fixed4 col = tex2D(_MainTex, i.uv);
+				// fixed4 col = tex2D(_MainTex, i.uv);
 
 				// col.rgb = floor(col.rgb * 8.0) / 8.0;
 				// col.rgb += (n) * 0.01;

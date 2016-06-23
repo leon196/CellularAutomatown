@@ -125,12 +125,12 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				// fixed4 color = tex2D(_GrabTexture, i.uvgrab);
-				fixed4 color = fixed4(tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uvgrab)).rgb, 1);
-				fixed4 edge = abs(filter2(_GrabTexture, i.uvgrab, float4(_Resolution * 4, 1, 1)));
+				// fixed4 color = fixed4(tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uvgrab)).rgb, 1);
+				// color -= edge;
 
-				color -= edge;
-
-				color *= clamp(tex2D(_CameraTexture, i.uv) + 0.5, 0.0, 1.0);
+				fixed4 color = tex2D(_CameraTexture, i.uv);
+				fixed4 edge = 1.0 - clamp(abs(filter2(_GrabTexture, i.uvgrab, float4(_Resolution * 2, 1, 1))), 0.0, 1.0);
+				color.rgb *= edge.rgb;
 
 				return color;
 			}

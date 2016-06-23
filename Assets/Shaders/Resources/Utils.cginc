@@ -1,15 +1,24 @@
 
-float HowManyAround (sampler2D bitmap, float2 p, float2 resolution)
+float HowManyAround (sampler2D bitmap, float2 p, float2 resolution, float3 treshold)
 {
 	int count = 0;
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2(-1.0, -1.0) / resolution)));
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2( 0.0, -1.0) / resolution)));
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2( 1.0, -1.0) / resolution)));
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2(-1.0,  0.0) / resolution)));
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2( 1.0,  0.0) / resolution)));
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2(-1.0,  1.0) / resolution)));
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2( 0.0,  1.0) / resolution)));
-	count += step(0.2, Luminance(tex2D(bitmap, p + float2( 1.0,  1.0) / resolution)));
+  float4 c;
+  c = tex2D(bitmap, p + float2(-1.0, -1.0) / resolution);
+  count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
+  c = tex2D(bitmap, p + float2( 0.0, -1.0) / resolution);
+	count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
+	c = tex2D(bitmap, p + float2( 1.0, -1.0) / resolution);
+  count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
+	c = tex2D(bitmap, p + float2(-1.0,  0.0) / resolution);
+  count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
+	c = tex2D(bitmap, p + float2( 1.0,  0.0) / resolution);
+  count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
+	c = tex2D(bitmap, p + float2(-1.0,  1.0) / resolution);
+  count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
+	c = tex2D(bitmap, p + float2( 0.0,  1.0) / resolution);
+  count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
+  c = tex2D(bitmap, p + float2( 1.0,  1.0) / resolution);
+  count += step(treshold.r, c.r) + step(treshold.g, c.g) + step(treshold.b, c.b);
 	return count;
 }
 

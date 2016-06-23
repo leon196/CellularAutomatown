@@ -56,6 +56,7 @@
 
 			sampler2D _MainTex;
 			sampler2D _CameraTexture;
+			sampler2D _WaterTex;
 			float4 _MainTex_ST;
 			float2 _Resolution;
 
@@ -131,6 +132,9 @@
 				fixed4 color = tex2D(_CameraTexture, i.uv);
 				fixed4 edge = 1.0 - clamp(abs(filter2(_GrabTexture, i.uvgrab, float4(_Resolution * 2, 1, 1))), 0.0, 1.0);
 				color.rgb *= edge.rgb;
+
+				fixed4 water = tex2D(_WaterTex, i.uv);
+				color.rgb = lerp(color.rgb, water, Luminance(water));
 
 				return color;
 			}

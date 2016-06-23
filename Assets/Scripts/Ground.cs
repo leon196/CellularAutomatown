@@ -22,6 +22,8 @@ public class Ground : CellularAutomaton
 			materialCellularAutomaton.SetColor("_ColorB", colorB);
 			materialCellularAutomaton.SetTexture("_WaterTex", water.output);
 			materialCellularAutomaton.SetTexture("_HeightTex", heightTexture);
+			
+			Shader.SetGlobalTexture("_WaterTex", water.output);
 
 			if (materialAlpha)
 			{

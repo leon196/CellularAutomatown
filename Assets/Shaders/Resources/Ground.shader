@@ -11,12 +11,13 @@ Shader "Hidden/Ground"
 		Pass
 		{
 			CGPROGRAM
-			#pragma vertex vert_img
+			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
 			#include "Utils.cginc"
 			
 			sampler2D _MainTex;
+			float4 _MainTex_ST;
 			sampler2D _HeightTex;
 			sampler2D _WaterTex;
 			float2 _Resolution;
@@ -25,21 +26,47 @@ Shader "Hidden/Ground"
 			float2 _PaintPosition;
 			float4 _PaintColor;
 
-			fixed4 frag (v2f_img i) : SV_Target
+			struct v2f {
+				float4 pos : SV_POSITION;
+				float2 uv : TEXCOORD0;
+				float4 screenUV : TEXCOORD1;
+			};
+
+			v2f vert (appdata_full v)
+			{
+				v2f o;
+				o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+				o.uv = TRANSFORM_TEX (v.texcoord, _MainTex);
+				o.screenUV = ComputeScreenPos(o.pos);
+				return o;
+			}
+
+			fixed4 frag (v2f i) : SV_Target
 			{
 				float unit = 1.0 / _Resolution;
 
-				float n = noiseIQ(float3(i.uv * 8.0, _Time.y * 0.2));
+				float n = noiseIQ(float3(i.uv * 2.0 + _Time.y, _Time.y * 0.2));
 				// fixed4 col = fixed4(1,1,1,1);
 				// col.rgb *= n;
-				float angle = n * PI * 2.0;
 				// float angle = Luminance(tex2D(_MainTex, i.uv)) * PI * 2.0;
-				float2 offset = float2(cos(angle), sin(angle)) * unit * 0.1;
+				float angle = 0;
+				float2 offset = float2(0,0);
 
-				offset += lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit * 0.02;
+				angle = fmod(_Time.y * 0.1, PI * 2);
+				offset += float2(cos(angle), sin(angle)) * unit;
+
+				angle = n * PI * 2.0;
+				offset += float2(cos(angle), sin(angle)) * unit;
+
+				offset -= lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit;
+
+				angle = rand(i.screenUV + _Time.y) * PI * 2;
+				// float osc = sin(_Time.y) * 0.5 + 0.5;
+				offset += float2(cos(angle), sin(angle)) * unit;
 				
 				// fixed4 col = lerp(tex2D(_MainTex, i.uv), tex2D(_HeightTex, i.uv - offset), 0.5);
-				fixed4 col = tex2D(_MainTex, i.uv - offset);
+				fixed4 col = tex2D(_MainTex, fmod(abs(i.uv - offset + 1.0), 1.0));
+				col = lerp(col, tex2D(_MainTex, i.uv), 0.8);
 
 				// fixed4 col = tex2D(_MainTex, i.uv);
 
@@ -54,9 +81,9 @@ Shader "Hidden/Ground"
 				if (_ShouldPaint) 
 				{
 					float dist = distance(i.uv, _PaintPosition);
-					float d = 1.0 - clamp(dist * 20.0, 0.0, 1.0);
-					float paint = step(dist, _PaintSize / _Resolution) * d;
-					col.rgb = lerp(col.rgb, _PaintColor, paint);
+					// float d = 1.0 - clamp(dist / _PaintSize, 0.0, 1.0);
+					float paint = 1.0 - smoothstep(0.0, _PaintSize / _Resolution, dist);// * d;
+					col.rgb = lerp(col.rgb, _PaintColor, paint);// * rand(i.screenUV + _Time.y));
 				}
 
 				// col.rgb = lerp(float3(1,1,1), col.rgb, step(unit, distance(i.uv, float2(0.5, 0.5))));

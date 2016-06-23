@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class Water : CellularAutomaton
 {
-	public Color color;
+	public Color waterColor;
+	public Color greenColor;
 	public Ground ground;
 
 	private Texture2D texture2D;
@@ -27,7 +28,8 @@ public class Water : CellularAutomaton
 		if (materialCellularAutomaton != null)
 		{
 			materialCellularAutomaton.SetTexture("_GroundTex", ground.output);
-			materialCellularAutomaton.SetColor("_WaterColor", color);
+			materialCellularAutomaton.SetColor("_WaterColor", waterColor);
+			materialCellularAutomaton.SetColor("_GreenColor", greenColor);
 		}
 	}
 }

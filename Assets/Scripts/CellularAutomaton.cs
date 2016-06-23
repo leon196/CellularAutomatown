@@ -21,7 +21,10 @@ public class CellularAutomaton : MonoBehaviour
 	private Texture2D input;
 	private FrameBuffer frameBuffer;
 	private Material materialOutput;
+	[HideInInspector] public RenderTexture result;
 	[HideInInspector] public RenderTexture output;
+
+	Blur blur;
 
 	void Start ()
 	{
@@ -48,6 +51,8 @@ public class CellularAutomaton : MonoBehaviour
 
 		materialOutput = GetComponent<Renderer>().sharedMaterial;
 
+		blur = GameObject.FindObjectOfType<Blur>();
+
 		if (materialOutput)
 		{
 			materialOutput.mainTexture = input;
@@ -58,34 +63,36 @@ public class CellularAutomaton : MonoBehaviour
 		Graphics.Blit(input, frameBuffer.Get());
 		frameBuffer.Swap();
 		output = frameBuffer.Get();
+
+		result = new RenderTexture(Engine.width, Engine.height, 24, RenderTextureFormat.ARGB32);
 	}
 
 	public void onPreRender (Camera camera)
 	{
+		Shader.SetGlobalVector("_Resolution", new Vector2(Engine.width, Engine.height));
+
 		if (materialCellularAutomaton == null)
 		{
 			materialCellularAutomaton = new Material(shaderCellularAutomaton);
 		}
-		else
-		{
-			materialCellularAutomaton.SetVector("_Resolution", new Vector2(Engine.width, Engine.height));
-		}
 
-		if (last + delay <= Time.time)
-		{
-			last = Time.time;
-			delay = 1f / (float)frameRate;
+		// if (last + delay <= Time.time)
+		// {
+		// 	last = Time.time;
+		// 	delay = 1f / (float)frameRate;
 
 			Graphics.Blit(frameBuffer.Get(), output, materialCellularAutomaton);
 
 			output = frameBuffer.Get();
 			frameBuffer.Swap();
 
+			blur.Blit(output, result);
+
 			if (materialOutput)
 			{
-				materialOutput.mainTexture = output;
+				materialOutput.mainTexture = result;
 			}
-		}
+		// }
 	}
 
 	public void Print (Texture texture)

@@ -4,6 +4,6 @@ using System.Collections.Generic;
 
 public class Engine
 {
-	static public int width = 128;
-	static public int height = 128;
+	static public int width = 1024;
+	static public int height = 1024;
 }

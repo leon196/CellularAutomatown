@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Paint : MonoBehaviour
 {
-	[Range (1, 10)] public int size = 1;
+	[Range (1, 100)] public int size = 1;
 	// public Texture background;
 	Color color = Color.white;
 

@@ -36,7 +36,7 @@ Shader "Hidden/Ground"
 				// float angle = Luminance(tex2D(_MainTex, i.uv)) * PI * 2.0;
 				float2 offset = float2(cos(angle), sin(angle)) * unit * 0.1;
 
-				offset += lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit * 0.01;
+				offset += lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit * 0.02;
 				
 				// fixed4 col = lerp(tex2D(_MainTex, i.uv), tex2D(_HeightTex, i.uv - offset), 0.5);
 				fixed4 col = tex2D(_MainTex, i.uv - offset);

@@ -30,8 +30,8 @@ public class Ground : CellularAutomaton
 
 			if (materialHeightMap)
 			{
-				materialHeightMap.mainTexture = output;
-				materialHeightMap.SetTexture("_HeightTex", output);
+				materialHeightMap.mainTexture = result;
+				materialHeightMap.SetTexture("_HeightTex", result);
 			}
 		}
 		else

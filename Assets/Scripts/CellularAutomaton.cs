@@ -10,35 +10,29 @@ public class CellularAutomaton : MonoBehaviour
 	// material used to store cellular automaton
 	[HideInInspector] public Material materialCellularAutomaton;
 
-	// material to show texture
-	public Material materialOutput;
-
-	// grid size
-	[Range(32, 2048)] public int width = 128;
-	[Range(32, 2048)] public int height = 128;
-
 	// refresh rate
 	[Range(1, 60)] public int frameRate = 60;
 	private float delay = 0f;
 	private float last = 0f;
 
-	[Range(0f, 1f)] public float lifeTreshold = 0.5f;
-	[Range(0f, 0.1f)] public float acceleration = 0.1f;
-
 	public bool startWithNoise = false;
 
 	// internal render process
 	private Texture2D input;
-	private RenderTexture output;
 	private FrameBuffer frameBuffer;
+	private Material materialOutput;
+	[HideInInspector] public RenderTexture result;
+	[HideInInspector] public RenderTexture output;
+
+	Blur blur;
 
 	void Start ()
 	{
 		Camera.onPreRender += onPreRender;
 		
-		input = new Texture2D(width, height);
+		input = new Texture2D(Engine.width, Engine.height);
 		
-		Color[] colorArray = new Color[width * height];
+		Color[] colorArray = new Color[Engine.width * Engine.height];
 		if (startWithNoise)
 		{
 			for (int i = 0; i < colorArray.Length; ++i) {
@@ -55,46 +49,50 @@ public class CellularAutomaton : MonoBehaviour
 		input.SetPixels(colorArray);
 		input.Apply();
 
+		materialOutput = GetComponent<Renderer>().sharedMaterial;
+
+		blur = GameObject.FindObjectOfType<Blur>();
+
 		if (materialOutput)
 		{
 			materialOutput.mainTexture = input;
 		}
 
 		frameBuffer = new FrameBuffer();
-		frameBuffer.Create(width, height);
+		frameBuffer.Create(Engine.width, Engine.height);
 		Graphics.Blit(input, frameBuffer.Get());
 		frameBuffer.Swap();
 		output = frameBuffer.Get();
+
+		result = new RenderTexture(Engine.width, Engine.height, 24, RenderTextureFormat.ARGB32);
 	}
 
 	public void onPreRender (Camera camera)
 	{
+		Shader.SetGlobalVector("_Resolution", new Vector2(Engine.width, Engine.height));
+
 		if (materialCellularAutomaton == null)
 		{
 			materialCellularAutomaton = new Material(shaderCellularAutomaton);
 		}
-		else
-		{
-			materialCellularAutomaton.SetVector("_Resolution", new Vector2(width, height));
-			materialCellularAutomaton.SetFloat("_LifeTreshold", lifeTreshold);
-			materialCellularAutomaton.SetFloat("_Acceleration", acceleration);
-		}
 
-		if (last + delay <= Time.time)
-		{
-			last = Time.time;
-			delay = 1f / (float)frameRate;
+		// if (last + delay <= Time.time)
+		// {
+		// 	last = Time.time;
+		// 	delay = 1f / (float)frameRate;
 
 			Graphics.Blit(frameBuffer.Get(), output, materialCellularAutomaton);
 
 			output = frameBuffer.Get();
 			frameBuffer.Swap();
 
+			blur.Blit(output, result);
+
 			if (materialOutput)
 			{
-				materialOutput.mainTexture = output;
+				materialOutput.mainTexture = result;
 			}
-		}
+		// }
 	}
 
 	public void Print (Texture texture)

@@ -4,16 +4,21 @@ using System.Collections.Generic;
 
 public class Paint : MonoBehaviour
 {
-	public Color color = Color.white;
-	[Range (1, 10)] public int size = 1;
-	public Texture background;
+	[Range (1, 100)] public int size = 1;
+	// public Texture background;
+	Color color = Color.white;
 
 	Ray ray;
 	RaycastHit hitInfo;
 	Material material;
+	Texture2D texture2d;
+
+	CellularAutomaton cellularAutomaton;
 
 	void Start ()
 	{
+		cellularAutomaton = GetComponent<CellularAutomaton>();
+		texture2d = new Texture2D(Engine.width, Engine.height);
 	}
 
 	void Update ()
@@ -23,10 +28,24 @@ public class Paint : MonoBehaviour
 			UpdatePaint(hitInfo.textureCoord);
 
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out hitInfo, 100)) 
+			if (Input.GetMouseButton(0) && Physics.Raycast(ray, out hitInfo, 100)) 
 			{
-					// Debug.DrawLine(ray.origin, hitInfo.point);
+				if (hitInfo.transform.gameObject == this.gameObject)
+				{
+					if (Input.GetMouseButtonDown(0))
+					{
+						RenderTexture.active = cellularAutomaton.output;
+						texture2d.ReadPixels(new Rect(0, 0, Engine.width, Engine.height), 0, 0);
+						texture2d.Apply();
+						color = texture2d.GetPixel((int)(hitInfo.textureCoord.x * Engine.width), (int)(hitInfo.textureCoord.y * Engine.height));
+					}
+
 					StartPaint();
+				}
+				else
+				{
+					StopPaint();
+				}
 			}
 			else
 			{
@@ -35,8 +54,7 @@ public class Paint : MonoBehaviour
 		}
 		else
 		{
-			CellularAutomaton cellularAutomaton = GameObject.FindObjectOfType<CellularAutomaton>();
-			cellularAutomaton.Print(background);
+			// cellularAutomaton.Print(background);
 			material = cellularAutomaton.materialCellularAutomaton;
 		}
 	}
@@ -48,7 +66,7 @@ public class Paint : MonoBehaviour
 
 	void UpdatePaint (Vector2 point)
 	{
-		material.SetTexture("_Background", background);
+		// material.SetTexture("_Background", background);
 		material.SetColor("_PaintColor", color);
 		material.SetFloat("_PaintSize", size);
 		material.SetVector("_PaintPosition", point);

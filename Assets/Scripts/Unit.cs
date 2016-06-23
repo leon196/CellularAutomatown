@@ -9,6 +9,7 @@ public class Unit
 	private bool instantiated;
 	private string type;
 	private Object instance;
+	private float lifespan;
 
 
 	public Unit(Vector2 sample)
@@ -18,6 +19,16 @@ public class Unit
 		v = sample;
 		instantiated = false;
 		type = "default";
+	}
+
+	public Unit(Vector2 sample, float ls)
+	{
+		x = sample.x;
+		y = sample.y;
+		v = sample;
+		instantiated = false;
+		type = "default";
+		lifespan = ls;
 	}
 
 	public void modelize(GameObject body)
@@ -43,6 +54,16 @@ public class Unit
 	private void setX(float _x)
 	{
 		x = _x;
+	}
+
+	public float getLifespan()
+	{
+		return lifespan;
+	}
+
+	private void setLifespan(float _lifespan)
+	{
+		lifespan = _lifespan;
 	}
 
 	public float getY()

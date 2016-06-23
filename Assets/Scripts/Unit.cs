@@ -8,8 +8,8 @@ public class Unit
 	private Vector2 v;
 	private bool instantiated;
 	private string type;
-	private Object instance;
-
+	public GameObject instance;
+	public float lifeTime;
 
 	public Unit(Vector2 sample)
 	{
@@ -24,14 +24,18 @@ public class Unit
 	{
 		if (!instantiated)
 		{
-			instance = Object.Instantiate (body, new Vector3 (x, y, 0), Quaternion.identity);
+			instance = GameObject.Instantiate (body, new Vector3 (x, y, 0), Quaternion.identity) as GameObject;
+			instance.AddComponent<UnitScale>();
+			instance.GetComponent<UnitScale>().unit = this;
+			instance.layer = 5;
 			instantiated = true;
 		}
 	}
 
 	public void demodelize(float lifespan)
 	{
-		Object.Destroy (instance, lifespan);
+		lifeTime = lifespan;
+		GameObject.Destroy (instance, lifespan);
 		instantiated = false;
 	}
 

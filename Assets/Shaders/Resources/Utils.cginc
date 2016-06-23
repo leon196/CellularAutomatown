@@ -144,17 +144,29 @@ float2 lightDirection (sampler2D bitmap, float2 uv, float2 dimension)
   float3 c = tex2D(bitmap, uv).rgb;
   float l = Luminance(c);
 
-  c = tex2D(bitmap, uv - float2(1.0, 0.0) / dimension).rgb;
+  c = tex2D(bitmap, uv + float2(-1.0, 0.0) / dimension).rgb;
   force.x += Luminance(c) - l;
 
   c = tex2D(bitmap, uv + float2(1.0, 0.0) / dimension).rgb;
   force.x += l - Luminance(c);
 
-  c = tex2D(bitmap, uv - float2(0.0, 1.0) / dimension).rgb;
+  c = tex2D(bitmap, uv + float2(0.0, -1.0) / dimension).rgb;
   force.y += Luminance(c) - l;
 
   c = tex2D(bitmap, uv + float2(0.0, 1.0) / dimension).rgb;
   force.y += l - Luminance(c);
+
+  c = tex2D(bitmap, uv + float2(-1.0, -1.0) / dimension).rgb;
+  force += Luminance(c) - l;
+
+  c = tex2D(bitmap, uv + float2(-1.0, 1.0) / dimension).rgb;
+  force += l - Luminance(c);
+
+  c = tex2D(bitmap, uv + float2(1.0, -1.0) / dimension).rgb;
+  force += Luminance(c) - l;
+
+  c = tex2D(bitmap, uv + float2(1.0, 1.0) / dimension).rgb;
+  force += l - Luminance(c);
 
   return force;
   // return normalize(force);

@@ -56,6 +56,7 @@
 
 			sampler2D _MainTex;
 			sampler2D _CameraTexture;
+			sampler2D _UITexture;
 			sampler2D _WaterTex;
 			float4 _MainTex_ST;
 			float2 _Resolution;
@@ -135,6 +136,9 @@
 
 				fixed4 water = tex2D(_WaterTex, i.uv);
 				color.rgb = lerp(color.rgb, water, Luminance(water));
+
+				fixed4 house = tex2D(_UITexture, i.uv);
+				color.rgb = lerp(color.rgb, house.rgb, Luminance(house));
 
 				return color;
 			}

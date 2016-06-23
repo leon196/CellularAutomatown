@@ -45,7 +45,7 @@ Shader "Hidden/Ground"
 			{
 				float unit = 1.0 / _Resolution;
 
-				float n = noiseIQ(float3(i.uv * 2.0 + _Time.y, _Time.y * 0.2));
+				float n = noiseIQ(float3(i.uv * 8.0 + _Time.y, _Time.y * 0.2));
 				// fixed4 col = fixed4(1,1,1,1);
 				// col.rgb *= n;
 				// float angle = Luminance(tex2D(_MainTex, i.uv)) * PI * 2.0;
@@ -53,12 +53,12 @@ Shader "Hidden/Ground"
 				float2 offset = float2(0,0);
 
 				angle = fmod(_Time.y * 0.1, PI * 2);
-				offset += float2(cos(angle), sin(angle)) * unit;
+				// offset += float2(cos(angle), sin(angle)) * unit;
 
 				angle = n * PI * 2.0;
-				offset += float2(cos(angle), sin(angle)) * unit;
+				// offset += float2(cos(angle), sin(angle)) * unit;
 
-				offset -= lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit;
+				offset -= lightDirectionUnit(_MainTex, i.uv, _Resolution) * unit * 0.25;
 
 				angle = rand(i.screenUV + _Time.y) * PI * 2;
 				// float osc = sin(_Time.y) * 0.5 + 0.5;
@@ -83,7 +83,7 @@ Shader "Hidden/Ground"
 					float dist = distance(i.uv, _PaintPosition);
 					// float d = 1.0 - clamp(dist / _PaintSize, 0.0, 1.0);
 					float paint = 1.0 - smoothstep(0.0, _PaintSize / _Resolution, dist);// * d;
-					col.rgb = lerp(col.rgb, _PaintColor, paint);// * rand(i.screenUV + _Time.y));
+					col.rgb = lerp(col.rgb, _PaintColor, paint);// * rand(i.uv + _Time.y));
 				}
 
 				// col.rgb = lerp(float3(1,1,1), col.rgb, step(unit, distance(i.uv, float2(0.5, 0.5))));

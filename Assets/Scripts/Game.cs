@@ -12,7 +12,8 @@ public class Game : MonoBehaviour {
 	List<Unit> unitList;
 	List<Unit> activeList;
 
-
+	public Texture2D texture2D;
+	private Camera orthoCamera;
 
 	private bool flag = true;
 
@@ -23,11 +24,17 @@ public class Game : MonoBehaviour {
 
 	private MyPDisc mpd;
 
+	private Water water;
+
 	// Use this for initialization
 	void Start ()
 	{
 		mpd = new MyPDisc ();
 		Debug.Log ("<-=  Game Launched  =->\n");
+
+		water = GameObject.FindObjectOfType<Water>();
+		texture2D = new Texture2D(Engine.width, Engine.height);
+		orthoCamera = GetComponent<Camera>();
 
 		//sampler = new PoissonDiscSampler(width, height, 0.3f);
 		//unitList = new List<Unit>();
@@ -84,6 +91,10 @@ public class Game : MonoBehaviour {
 
 	void Update ()
 	{
+		RenderTexture.active = water.output;
+		texture2D.ReadPixels(new Rect(0, 0, water.output.width, water.output.height), 0, 0);
+		texture2D.Apply();
+
 		Vector2 randUnit = activeList[Random.Range(0, activeList.Count())].getV();
 		int k = 0;
 		while (k < 10) {
@@ -91,12 +102,17 @@ public class Game : MonoBehaviour {
 //		Debug.Log ("randUnit: "+randUnit.x.ToString()+"  \\  "+randUnit.y.ToString()+"\nnewPos: "+newPos.x.ToString()+"  \\  "+newPos.y.ToString());
 //		Debug.Log(unitList.Count());
 			Unit dat = new Unit (newPos);
+
+			Vector2 viewportPos = orthoCamera.WorldToViewportPoint(newPos);
+			Color textureColor = texture2D.GetPixel((int)(viewportPos.x * texture2D.width),(int)(viewportPos.y * texture2D.height));
+			float luminance = Mathf.Clamp(textureColor.g - textureColor.b, 0f, 1f);
+
 			if (newPos != randUnit) {
 				unitList.Add (dat);
 				activeList.Add (dat);
 				dat.modelize (this.getBody (dat.getType ()));
-				dat.demodelize ((float)Random.Range(5, 40));
-				return;
+				dat.demodelize (10f * luminance);
+				break;
 			} else {
 				k += 1;
 				if (k >= 10) {

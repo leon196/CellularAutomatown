@@ -28,4 +28,7 @@ once it has comfortably spread out and that units start to perish, the algorithm
 ![alt text](https://cdn.discordapp.com/attachments/148910712981422080/195694597735841793/Algo1-fullstagnant.gif "Flora maintain survive")
 
 
+
+_######   To be continued..   ######_
+
 ######Project for the game jam bio and the city : https://itch.io/jam/biodesign-and-the-city

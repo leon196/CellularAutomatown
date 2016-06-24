@@ -1,6 +1,6 @@
 # CellularAutomatown
 #### Authors:
-[Leon167](https://github.com/leon196) _-=-_ [darkbeanbbq](https://github.com/darkbeanbbq) _-=-_ [Lejeunw](https://github.com/lejeunw)
+![alt text](https://avatars2.githubusercontent.com/u/2514652?v=3&s=40 "icon") [Leon167](https://github.com/leon196) ------ ![alt text](https://avatars0.githubusercontent.com/u/2822148?v=3&s=40 "icon") [darkbeanbbq](https://github.com/darkbeanbbq) ------ ![alt text](https://avatars2.githubusercontent.com/u/12818663?v=3&s=40 "icon")  [Lejeunw](https://github.com/lejeunw)
 
 ## Algorithmes
 #### Cities:

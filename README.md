@@ -1,7 +1,7 @@
 # CellularAutomatown
 
 
-![alt text](https://cdn.discordapp.com/attachments/148910712981422080/195703652374151169/splashscreen00.png "What we'd like to achieve")
+![alt text](https://cdn.discordapp.com/attachments/148910712981422080/195704328214937601/splashscreen01.png "What we'd like to achieve")
 
 
 #### Authors:

@@ -3,10 +3,11 @@ using System.Collections;
 
 public class MyPDisc
 {
-	private Collider[] colliderList;
+	
 
 	public bool nearObjects(Vector2 xy, float radius)
 	{
+		Collider[] colliderList;
 		colliderList = Physics.OverlapSphere (xy, radius);
 
 		if (colliderList.Length == 0)

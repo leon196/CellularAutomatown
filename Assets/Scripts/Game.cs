@@ -15,19 +15,20 @@ public class Game : MonoBehaviour {
 	List<Unit> unitList;
 	List<Unit> activeList;
 
-	List<Unit> trees;
+	List<Tree> trees;
 
 
-	private bool flag = true;
+	//private bool flag = true;
 
 	[Range (1, 50)] public float width = 10;
 	[Range (1, 50)] public float height = 10;
 	[Range (0f, 3f)] public float radius = 0.3f;
 	public float lifespan = 100.0f;
 
-	private MyPDisc mpd;
+	public MyPDisc mpd;
 
 	//private Rect rect;
+
 
 	// Use this for initialization
 	void Start ()
@@ -39,14 +40,29 @@ public class Game : MonoBehaviour {
 		unitList.Add (new Unit (new Vector2 (12.0f, 12.0f)));
 		activeList = unitList;
 
-		trees = new List<Unit> ();
+		trees = new List<Tree> ();
 
-
+		Tree theMegaTree = new Tree (new Vector2 (0, 0));
+		theMegaTree.treegasm(trees, this);
 	}
 
 	void Update ()
 	{
-		algo3 ();
+
+		int i = 0;
+		float treeCount = trees.Count ();
+		while (i < treeCount)
+		{
+			trees[i].ageIncrement ();
+			trees[i].treegasm (trees, this);
+
+			if (trees [i].age == trees [i].death)
+			{
+				trees.Remove (trees [i]);
+			}
+
+			i += 1;
+		}
 	}
 
 	void algo3()
@@ -111,7 +127,7 @@ public class Game : MonoBehaviour {
 					activeList.Remove (dat);
 					randUnit = activeList[Random.Range(0, activeList.Count())].getV();
 					k = 0;
-					trees.Add (tree);
+					//trees.Add (tree);
 					tree.modelize (getBody ("root"));
 					//Debug.Log("Failed to place point after 20 attempts");
 				}
@@ -144,7 +160,7 @@ public class Game : MonoBehaviour {
 					activeList.Remove (dat);
 					randUnit = activeList[Random.Range(0, activeList.Count())].getV();
 					k = 0;
-					trees.Add (tree);
+					//trees.Add (tree);
 					tree.modelize (getBody ("root"));
 					//Debug.Log("Failed to place point after 20 attempts");
 				}
@@ -160,6 +176,8 @@ public class Game : MonoBehaviour {
 			return _root;
 		else if (type == "trunk")
 			return _trunk;
+		else if (type == "tree")
+			return _default;
 		else
 			return _default;
 	}
